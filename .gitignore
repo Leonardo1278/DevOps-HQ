@@ -1,0 +1,23 @@
+# env
+.env
+.env.local
+.env.*.local
+
+# python
+apps/api/.venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# uploads / os
+apps/api/.data/
+.DS_Store
+*.pem
+.idea/
+.vscode/
+.coverage
+htmlcov/
