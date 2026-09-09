@@ -1,6 +1,6 @@
 # DevOps-HQ
 
-**Fase 1 — CI · Fase 2 — Contenerización**  
+**Fase 1 — CI · Fase 2 — Docker · Fase 3 — Terraform**  
 Escuela Bancaria y Comercial (EBC) · Leonardo Cueto  
 Repositorio: [Leonardo1278/DevOps-HQ](https://github.com/Leonardo1278/DevOps-HQ) · rama `main`
 
@@ -82,10 +82,10 @@ curl http://127.0.0.1:8000/health
 - Jenkins LTS 2.568.3 en el puerto `8080`
 - Definition: *Pipeline script from SCM* → Git → `*/main` → `Jenkinsfile`
 
-La IP pública cambia si se apaga y enciende la EC2; hay que actualizar el webhook.
+La IP pública de **Fase 1–2** (`devops-hq-jenkins`) no la gestiona Terraform. Fase 3 crea **otra** EC2 (`devops-hq-fase3`).
 
-## Seguridad
+## Fase 3 — Terraform (Cloud Shell)
 
-No commitear `.env`, tokens, `.pem` ni el video. Este `.gitignore` ya excluye secretos y virtualenvs.
+Archivos: `terraform/provider.tf` y `terraform/main.tf`. En `main.tf` hay que poner el `subnet_id` real y el `key_name` del par de claves **nuevo**.
 
-Terraform es Fase 3. No commitear el video.
+No commitear `.tfstate`, `.pem` ni el video.

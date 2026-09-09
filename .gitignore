@@ -22,3 +22,10 @@ apps/api/.data/
 .vscode/
 .coverage
 htmlcov/
+
+# terraform (Fase 3 — state solo en Cloud Shell, no en Git)
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/tfplan
