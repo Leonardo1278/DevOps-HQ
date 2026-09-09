@@ -4,7 +4,8 @@ from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _API_DIR = Path(__file__).resolve().parents[2]
-_REPO_ROOT = _API_DIR.parents[1]
+# En Docker el código vive en /app; no hay monorepo dos niveles arriba.
+_REPO_ROOT = _API_DIR.parents[1] if len(_API_DIR.parts) > 3 else _API_DIR
 
 
 class Settings(BaseSettings):

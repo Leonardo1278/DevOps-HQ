@@ -9,11 +9,15 @@ pipeline {
   environment {
     APP_ENV = 'development'
     PIP_DISABLE_PIP_VERSION_CHECK = '1'
+    IMAGE_BASE = 'devops-hq-base:1.0'
+    IMAGE_APP = 'devops-hq-api:1.0'
+    CONTAINER_APP = 'devops-hq-api'
   }
 
   stages {
     stage('Checkout') {
       steps {
+        echo 'Obteniendo el código del repositorio...'
         checkout scm
       }
     }
@@ -36,6 +40,13 @@ pipeline {
       }
     }
 
+    stage('Verificar Docker') {
+      steps {
+        sh 'docker --version'
+        sh 'docker info >/dev/null'
+      }
+    }
+
     stage('Preparar entorno') {
       steps {
         dir('apps/api') {
@@ -50,24 +61,13 @@ pipeline {
             . .venv/bin/activate
             python --version
             pip install --upgrade pip
-          '''
-        }
-      }
-    }
-
-    stage('Instalar dependencias') {
-      steps {
-        dir('apps/api') {
-          sh '''
-            set -eu
-            . .venv/bin/activate
             pip install -r requirements-dev.txt
           '''
         }
       }
     }
 
-    stage('Ejecutar pruebas') {
+    stage('Ejecutar Pruebas Python') {
       steps {
         dir('apps/api') {
           sh '''
@@ -79,15 +79,51 @@ pipeline {
       }
     }
 
-    stage('Validar FastAPI') {
+    stage('Construir Imagen Base') {
       steps {
-        dir('apps/api') {
-          sh '''
-            set -eu
-            . .venv/bin/activate
-            python -c "from app.main import app; print('app:', app.title)"
-          '''
-        }
+        sh 'docker build -t "$IMAGE_BASE" -f Dockerfile.base .'
+      }
+    }
+
+    stage('Construir Imagen Aplicacion') {
+      steps {
+        sh 'docker build -t "$IMAGE_APP" -f Dockerfile .'
+      }
+    }
+
+    stage('Ejecutar Pruebas en Docker') {
+      steps {
+        sh 'docker run --rm "$IMAGE_APP" pytest tests/test_health.py -q'
+      }
+    }
+
+    stage('Ejecutar Contenedor') {
+      steps {
+        sh '''
+          set -eu
+          docker rm -f "$CONTAINER_APP" >/dev/null 2>&1 || true
+          docker run -d --name "$CONTAINER_APP" -p 8000:8000 -e APP_ENV=development "$IMAGE_APP"
+          i=0
+          while [ "$i" -lt 20 ]; do
+            if curl -fsS http://127.0.0.1:8000/health | grep -q '"status":"ok"'; then
+              echo "Health OK"
+              curl -fsS http://127.0.0.1:8000/health
+              echo
+              exit 0
+            fi
+            i=$((i + 1))
+            sleep 2
+          done
+          echo "ERROR: /health no respondió a tiempo"
+          docker logs "$CONTAINER_APP" || true
+          exit 1
+        '''
+      }
+    }
+
+    stage('Finalizado') {
+      steps {
+        echo 'Pipeline Fase 2: Python, imagen base, imagen app y contenedor OK.'
       }
     }
   }

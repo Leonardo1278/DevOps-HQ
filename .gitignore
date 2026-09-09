@@ -17,6 +17,7 @@ __pycache__/
 apps/api/.data/
 .DS_Store
 *.pem
+*.mov
 .idea/
 .vscode/
 .coverage
