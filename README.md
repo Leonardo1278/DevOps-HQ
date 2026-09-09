@@ -12,3 +12,5 @@ Contiene solo el backend FastAPI de LEO HQ. El producto completo (`leoUniverse`)
 - No usa PostgreSQL, S3, Cognito ni OpenAI
 
 No commitear `.env` ni secretos.
+
+Evidencia video Fase 1 (EBC): un `git push` a `main` debe crear un build nuevo en Jenkins sin pulsar Construir ahora.
