@@ -14,7 +14,7 @@ El video **no está en este repo** (pesa ~87 MB y rompería el checkout de Jenki
 
 ### https://drive.google.com/drive/folders/15YBh3UyllQR5nsIlMRSkGaKOSePxA5Sk?usp=sharing
 
-Ahí está `video_fase1` y las capturas: un `git push` a `main` crea un build en Jenkins **sin** pulsar *Construir ahora*.
+Ahí está `video_fase1`, `video_fase2` y las capturas: un `git push` a `main` crea un build en Jenkins **sin** pulsar *Construir ahora*. El de Fase 2 debe construir las imágenes Docker y dejar `/health` en el contenedor.
 
 ---
 
