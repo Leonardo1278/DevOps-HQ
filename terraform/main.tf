@@ -12,7 +12,7 @@
 
 locals {
   key_name      = "devops-hq-fase3"
-  subnet_id     = "subnet-REEMPLAZA"
+  subnet_id     = "subnet-07ef02eaf11de8310"
   instance_type = "t3.small"
 }
 
