@@ -11,6 +11,7 @@ def test_health_ok() -> None:
     body = response.json()
     assert body["status"] == "ok"
     assert "env" in body
+    assert body["service"] == "leo-hq"
 
 
 def test_api_v1_health_shape() -> None:

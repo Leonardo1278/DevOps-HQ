@@ -27,7 +27,7 @@ app.include_router(api_router, prefix="/api/v1")
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    return {"status": "ok", "env": settings.app_env}
+    return {"status": "ok", "env": settings.app_env, "service": "leo-hq"}
 
 
 @app.get("/api/v1/health")
